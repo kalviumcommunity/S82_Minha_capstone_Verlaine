@@ -1,6 +1,6 @@
 const User = require("../models/User");
 
-// Get all users (admin only — should already be restricted in route)
+
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -10,7 +10,7 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// Get a single user by ID (admin or self)
+
 exports.getUserById = async (req, res) => {
   try {
     if (req.user.id !== req.params.id && req.user.role !== "admin") {
@@ -25,7 +25,7 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-// Update a user (admin or self only)
+
 exports.updateUser = async (req, res) => {
   try {
     if (req.user.id !== req.params.id && req.user.role !== "admin") {
@@ -51,7 +51,7 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Delete a user (admin or self only)
+
 exports.deleteUser = async (req, res) => {
   try {
     if (req.user.id !== req.params.id && req.user.role !== "admin") {
