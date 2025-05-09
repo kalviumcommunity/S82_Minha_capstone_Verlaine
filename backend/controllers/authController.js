@@ -6,7 +6,7 @@ const generateToken = (user) => {
     expiresIn: "7d",
   });
 };
-
+//post routes
 exports.signup = async (req, res) => {
   try {
     const { username, email, password } = req.body;
