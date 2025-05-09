@@ -29,8 +29,8 @@ app.get("/", (req, res) => {
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected to MongoDB bitch💅"))
-  .catch((err) => console.error("Ayyoo,baby MongoDB connection failed 💔", err));
+  .then(() => console.log("Connected to MongoDB 💅"))
+  .catch((err) => console.error("Ayyoo,MongoDB connection failed 💔", err));
 
 // Start server
 const PORT = process.env.PORT || 5000;
