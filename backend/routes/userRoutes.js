@@ -14,6 +14,9 @@ router.get("/", protect, adminOnly, getAllUsers);
 
 // get endpoints
 router.get("/:id", protect, getUserById);
+
+// Put route 
+// Route: PUT /api/users/:id
 router.put("/:id", protect, updateUser);
 router.delete("/:id", protect, deleteUser);
 
