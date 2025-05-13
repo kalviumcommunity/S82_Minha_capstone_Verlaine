@@ -1,6 +1,6 @@
 const User = require("../models/User");
 
-// Get all users (admin only — should already be restricted in route)
+// Get All Users Controller — Fetches all users from MongoDB (READ operation)
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");

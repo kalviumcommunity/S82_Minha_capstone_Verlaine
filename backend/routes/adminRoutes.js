@@ -3,7 +3,7 @@ const User = require("../models/User");
 const checkAdmin = require("../middleware/checkAdmin");
 const router = express.Router();
 
-// Post endpoint is used
+// 👇 DB Write: Adding a new user from admin side
 router.post("/add", checkAdmin, async (req, res) => {
   const { name, email, password, role } = req.body;
   try {

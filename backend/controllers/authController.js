@@ -7,19 +7,20 @@ const generateToken = (user) => {
   });
 };
 
+// Signup Controller — Writes new user to MongoDB (WRITE operation)
 exports.signup = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    const userExists = await User.findOne({ email });
+    const { username, email, password, role } = req.body;
 
+    const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    const user = await User.create({ username, email, password });
+    // role: role from body if provided, otherwise default to "user"
+    const user = await User.create({ username, email, password, role: role || "user" });
     const token = generateToken(user);
 
-    
     const { password: _, ...safeUser } = user._doc;
 
     res.status(201).json({ user: safeUser, token });
@@ -27,6 +28,7 @@ exports.signup = async (req, res) => {
     res.status(500).json({ message: "Signup failed", error: err.message });
   }
 };
+
 
 exports.login = async (req, res) => {
   try {
