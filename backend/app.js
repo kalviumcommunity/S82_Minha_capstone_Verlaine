@@ -26,5 +26,5 @@ app.use("/api/otp", otpRoutes);
 app.get("/", (req, res) => {
   res.send("🚀 Welcome to Verlaine Backend!");
 });
-
+//export
 module.exports = app;

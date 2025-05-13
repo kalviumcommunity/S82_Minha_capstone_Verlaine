@@ -7,7 +7,8 @@ const generateToken = (user) => {
   });
 };
 
-// Signup Controller — Writes new user to MongoDB (WRITE operation)
+// Signup Controller — Writes new user to MongoDB 
+//(WRITE operation)
 exports.signup = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
