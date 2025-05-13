@@ -1,6 +1,9 @@
 const User = require("../models/User");
 
 
+// Get All Users Controller — Fetches all users from MongoDB
+//read-oeration
+
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
