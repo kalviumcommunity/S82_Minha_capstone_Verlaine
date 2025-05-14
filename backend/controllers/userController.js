@@ -4,6 +4,8 @@ const User = require("../models/User");
 // Get All Users Controller — Fetches all users from MongoDB
 //read-oeration
 
+// Entity: User — Retrieves all User documents, excludes password field
+
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -13,6 +15,9 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+
+// Get a single user by ID (admin or self)
+// Entity: User — Fetches a specific User by ID; access restricted to self or admin
 
 exports.getUserById = async (req, res) => {
   try {
@@ -28,6 +33,8 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+// Update a user (admin or self only)
+// Only the User who owns the data or an Admin can update the User entity
 
 exports.updateUser = async (req, res) => {
   try {
@@ -54,6 +61,9 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+
+// Delete a user (admin or self only)
+// This affects related entities like Routines and JournalEntries via foreign key 
 
 exports.deleteUser = async (req, res) => {
   try {
