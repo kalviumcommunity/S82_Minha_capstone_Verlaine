@@ -56,7 +56,7 @@ const getJournalEntries = async (req, res) => {
 };
 
 
-
+// Update journal entry only if it belongs to a routine linked to the logged-in user
 const updateJournalEntry = async (req, res) => {
   try {
     const journalEntry = await JournalEntry.findById(req.params.id).populate("routine");
