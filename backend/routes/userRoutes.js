@@ -19,9 +19,11 @@ router.get("/", protect, adminOnly, getAllUsers);
 // Entity: User
 router.get("/:id", protect, getUserById);
 
+
 // Route: PUT /api/users/:id
 // Description: Update user information (admin or the user themself)
 // Entity: User
+
 router.put("/:id", protect, updateUser);
 
 // Route: DELETE /api/users/:id
