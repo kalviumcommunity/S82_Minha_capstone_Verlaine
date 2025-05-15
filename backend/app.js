@@ -26,6 +26,17 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/routine", routineRoutes);
 app.use("/api/otp", otpRoutes);
 app.use("/api", uploadRoute);
+
+const fs = require("fs");
+const path = require("path");
+
+const uploadsDir = path.join(__dirname, "uploads");
+
+// ✅ Check if uploads folder exists
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true }); // ✅ Create it if missing
+}
+
 app.use("/uploads", express.static("uploads"));
 
 // Base route

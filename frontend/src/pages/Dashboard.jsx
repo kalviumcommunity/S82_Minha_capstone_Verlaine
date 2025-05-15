@@ -1,14 +1,23 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+console.log("🌐 baseURL is:", baseURL);
 
 const Dashboard = () => {
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/ping")
-      .then((res) => console.log("✅ Server says:", res.data))
-      .catch((err) => console.error("❌ Connection failed", err));
-  }, []);
+useEffect(() => {
+  axios
+    .get(`${baseURL}/ping`)
+    .then((res) => console.log("✅ Server says:", res.data))
+    .catch((err) => console.error("❌ Connection failed", err));
+}, []);
+
+
+
+
+
+
+
 
   return (
     <div className="bg-rose-silk min-h-screen px-6 py-10 font-clean animate-fade-in">
