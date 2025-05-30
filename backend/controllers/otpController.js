@@ -2,18 +2,18 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const User = require('../models/User');
 
-
+// Utility: Generate a 6-digit OTP
 const generateOTP = () => {
   return crypto.randomInt(100000, 999999).toString();
 };
 
-
+// Utility: Send OTP email with logging and error handling
 const sendOTPEmail = async (user, otp) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER, // Your email address
-      pass: process.env.EMAIL_PASS, // Your email password
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
@@ -24,10 +24,16 @@ const sendOTPEmail = async (user, otp) => {
     text: `Your OTP code is: ${otp}`,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Email sent successfully:', info.response);
+  } catch (error) {
+    console.error('❌ Failed to send email:', error);
+    throw error; // rethrow to handle in sendOTP
+  }
 };
 
-
+// Route: Send OTP
 exports.sendOTP = async (req, res) => {
   const { email } = req.body;
   try {
@@ -37,20 +43,23 @@ exports.sendOTP = async (req, res) => {
     }
 
     const otp = generateOTP();
-    
-    
     user.otp = otp;
-    user.otpExpires = Date.now() + 10 * 60 * 1000; 
+    user.otpExpires = Date.now() + 10 * 60 * 1000; // OTP valid for 10 minutes
     await user.save();
 
-    await sendOTPEmail(user, otp);
-    res.status(200).json({ message: 'OTP sent to email' });
+    try {
+      await sendOTPEmail(user, otp);
+      res.status(200).json({ message: 'OTP sent to email' });
+    } catch (emailErr) {
+      res.status(500).json({ message: 'Failed to send OTP email', error: emailErr.message });
+    }
   } catch (err) {
-    res.status(500).json({ message: 'Error sending OTP', error: err });
+    console.error('❌ Error in sendOTP:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
-
+// Route: Verify OTP
 exports.verifyOTP = async (req, res) => {
   const { email, otp } = req.body;
   try {
@@ -59,7 +68,6 @@ exports.verifyOTP = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    
     if (user.otp !== otp) {
       return res.status(400).json({ message: 'Invalid OTP' });
     }
@@ -68,13 +76,13 @@ exports.verifyOTP = async (req, res) => {
       return res.status(400).json({ message: 'OTP expired' });
     }
 
-    
-    user.otp = undefined; 
-    user.otpExpires = undefined; 
+    user.otp = undefined;
+    user.otpExpires = undefined;
     await user.save();
 
     res.status(200).json({ message: 'OTP verified successfully' });
   } catch (err) {
-    res.status(500).json({ message: 'Error verifying OTP', error: err });
+    console.error('❌ Error in verifyOTP:', err);
+    res.status(500).json({ message: 'Error verifying OTP', error: err.message });
   }
 };

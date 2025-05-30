@@ -1,37 +1,50 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import NotFound from './pages/NotFound';
-import Login from './components/auth/Login';
-import Signup from './components/auth/Signup';
-import RoutineTracker from './components/RoutineTracker';
-import Journal from './components/Journal';
-import ProductChecker from './components/ProductChecker';
-import QuotePopup from './components/QuotePopup';
+import { Suspense, lazy } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthProvider';
 import Navbar from './components/Navbar';
+import Loader from './components/Loader';
+import QuotePopup from './components/QuotePopup';
+import RequireAuth from './components/RequireAuth';
+import ToastProvider from './components/ToastProvider';
 
-const App = () => {
+const Home = lazy(() => import('./pages/Home'));
+const Login = lazy(() => import('./components/auth/Login'));
+const Signup = lazy(() => import('./components/auth/Signup'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Journal = lazy(() => import('./components/Journal/Journal'));
+const RoutineTracker = lazy(() => import('./components/Routines/RoutineTracker'));
+const ProductChecker = lazy(() => import('./components/Products/ProductChecker'));
+const Budget = lazy(() => import('./pages/Budget'));
+const Community = lazy(() => import('./pages/Community'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+export default function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-100">
-        <Navbar />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/routine" element={<RoutineTracker />} />
-            <Route path="/journal" element={<Journal />} />
-            <Route path="/product-checker" element={<ProductChecker />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <QuotePopup />
-      </div>
-    </Router>
+    <AuthProvider>
+      <ToastProvider>
+        <div className="min-h-screen bg-gradient-to-b from-rose-50 to-cream">
+          <Navbar />
+          <main className="container mx-auto px-4">
+            <Suspense fallback={<Loader />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route element={<RequireAuth />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/journal" element={<Journal />} />
+                  <Route path="/routine" element={<RoutineTracker />} />
+                  <Route path="/product-checker" element={<ProductChecker />} />
+                  <Route path="/budget" element={<Budget />} />
+                  <Route path="/community" element={<Community />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </main>
+          <QuotePopup />
+        </div>
+      </ToastProvider>
+    </AuthProvider>
   );
-};
-
-export default App;
+}

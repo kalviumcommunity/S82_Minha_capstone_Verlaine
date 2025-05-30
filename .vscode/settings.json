@@ -1,0 +1,4 @@
+{
+    "tailwindCSS.experimental.tailwindVersion": "4",
+    "css.lint.unknownAtRules": "ignore"
+}

@@ -1,11 +1,11 @@
-export const quotes = [
-  "The journey of a thousand miles begins with one step.",
-  "Believe in yourself and all that you are.",
-  "Your skin is your best friend, take care of it.",
-  "The best project you'll ever work on is YOU.",
-  // Add more quotes as needed
+const quotes = [
+  'Your skin is a canvas of care and grace.',
+  'Beauty blooms where intention meets ritual.',
+  'Glow softly, like moonlight on a quiet night.',
+  'Every drop of care writes a poem on your skin.',
+  'Elegance is the art of nurturing yourself.',
 ];
 
-export const getQuote = () => {
+export function getQuote() {
   return quotes[Math.floor(Math.random() * quotes.length)];
-};
+}
