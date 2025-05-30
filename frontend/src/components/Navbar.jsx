@@ -1,26 +1,25 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/useAuth';
 
-const Navbar = () => {
-  const isLoggedIn = localStorage.getItem('token');
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
+export default function Navbar() {
+  const { user, logout } = useAuth();
 
   return (
-    <nav className="bg-petal px-6 py-4 shadow-md text-plum font-elegant">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">Verlaine</Link>
-        <div className="space-x-4 text-base">
-          <Link to="/dashboard" className="hover:underline">Dashboard</Link>
-          <Link to="/journal" className="hover:underline">Journal</Link>
-          <Link to="/routine" className="hover:underline">Routine</Link>
-          <Link to="/product-checker" className="hover:underline">Checker</Link>
-          {isLoggedIn ? (
-            <button onClick={handleLogout} className="hover:underline">Logout</button>
+    <nav className="bg-rose-600 text-white p-4">
+      <div className="container mx-auto flex justify-between">
+        <Link to="/" className="text-lg font-bold">Skin Care</Link>
+        <div className="space-x-4">
+          <Link to="/" className="hover:underline">Home</Link>
+          {user ? (
+            <>
+              <Link to="/dashboard" className="hover:underline">Dashboard</Link>
+              <Link to="/routine" className="hover:underline">Routine</Link>
+              <Link to="/journal" className="hover:underline">Journal</Link>
+              <Link to="/product-checker" className="hover:underline">Product Checker</Link>
+              <Link to="/budget" className="hover:underline">Budget</Link>
+              <Link to="/community" className="hover:underline">Community</Link>
+              <button onClick={logout} className="hover:underline">Logout</button>
+            </>
           ) : (
             <>
               <Link to="/login" className="hover:underline">Login</Link>
@@ -31,6 +30,4 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}

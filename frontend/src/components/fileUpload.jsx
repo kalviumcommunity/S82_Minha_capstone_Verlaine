@@ -1,67 +1,75 @@
-import { useState } from "react";
-import axios from "axios";
+import { useState } from 'react';
+import axios from '../services/api';
+import toast from 'react-hot-toast';
+import { Loader2 } from 'lucide-react';
 
-// Get backend base URL from environment variable
-const baseURL = import.meta.env.VITE_API_BASE_URL;
-
-const FileUpload = () => {
+export default function FileUpload() {
   const [file, setFile] = useState(null);
-  const [uploadedPath, setUploadedPath] = useState("");
+  const [uploadedPath, setUploadedPath] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) {
-      alert("Please select a file first.");
+      toast.error('Please select a file');
       return;
     }
+
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
 
     try {
-      // Use baseURL from env variable instead of hardcoded localhost
-      const res = await axios.post(`${baseURL}/api/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      setLoading(true);
+      const { data } = await axios.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true,
       });
-      // Set the path returned by backend to display image
-      setUploadedPath(res.data.filePath);
+      setUploadedPath(data.filePath);
+      toast.success('File uploaded successfully');
     } catch (err) {
-      console.error(err);
-      alert("Upload failed");
+      toast.error(err.response?.data?.message || 'Upload failed');
+      console.error('Upload error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md mx-auto mt-8">
-      <h2 className="text-xl font-semibold mb-4 text-center text-gray-800">
-        Upload a File
-      </h2>
-      <form onSubmit={handleUpload} className="flex flex-col space-y-4">
+    <div className="card w-full max-w-md mx-auto animate-slide-up">
+      <h3 className="text-xl font-serif text-rose-800 mb-4">Upload Image</h3>
+      <form onSubmit={handleUpload} className="space-y-4">
         <input
           type="file"
           onChange={(e) => setFile(e.target.files[0])}
-          className="file-input file-input-bordered w-full"
+          className="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-rose-100 file:text-rose-700"
+          disabled={loading}
+          aria-label="File upload"
         />
         <button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-xl transition duration-200"
+          className="btn-primary w-full"
+          disabled={loading}
+          aria-label="Upload file"
         >
-          Upload
+          {loading ? (
+            <span className="flex items-center justify-center">
+              <Loader2 className="animate-spin mr-2" size={20} />
+              Uploading...
+            </span>
+          ) : (
+            'Upload'
+          )}
         </button>
       </form>
-
-      {/* Show uploaded image if upload successful */}
       {uploadedPath && (
-        <div className="mt-6 text-center">
-          <p className="text-gray-600">Uploaded file:</p>
+        <div className="mt-4">
           <img
-            src={`${baseURL}${uploadedPath}`}
-            alt="Uploaded"
-            className="mt-2 max-w-full h-auto rounded-xl border"
+            src={`${import.meta.env.VITE_API_BASE_URL}${uploadedPath}`}
+            alt="Uploaded file"
+            className="w-full rounded-lg border border-rose-200"
           />
         </div>
       )}
     </div>
   );
-};
-
-export default FileUpload;
+}

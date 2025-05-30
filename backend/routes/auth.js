@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { signup, login } = require("../controllers/authController");
+const { signup, login, googleAuth, verifyLoginOTP } = require("../controllers/authController");
 
-//post endpoint is used for signup
 router.post("/signup", signup);
-// post router is used for login
 router.post("/login", login);
+router.post("/verify-login-otp", verifyLoginOTP);
+router.post("/google", googleAuth);
 
 module.exports = router;

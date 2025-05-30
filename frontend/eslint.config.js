@@ -21,6 +21,11 @@ export default [
         sourceType: 'module',
       },
     },
+    settings: {
+      react: {
+        version: '18.3', // Match React version in package.json
+      },
+    },
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,

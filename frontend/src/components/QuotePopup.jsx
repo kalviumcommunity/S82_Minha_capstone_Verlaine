@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { getQuote } from '../utils/Quotes';
+import { useState, useEffect } from 'react';
+import { getQuote } from '../utils/quotes';
 
-const QuotePopup = () => {
+export default function QuotePopup() {
   const [quote, setQuote] = useState('');
 
   useEffect(() => {
@@ -9,10 +9,8 @@ const QuotePopup = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white border border-gray-200 shadow-lg rounded-2xl p-4 max-w-xs z-50">
-      <p className="text-gray-700 italic">"{quote}"</p>
+    <div className="fixed bottom-4 right-4 card max-w-xs animate-slide-up">
+      <p className="text-rose-600 font-serif italic">"{quote}"</p>
     </div>
   );
-};
-
-export default QuotePopup;
+}
